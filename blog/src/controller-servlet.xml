@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p" 
+    xmlns:context="http://www.springframework.org/schema/context"
+     xmlns:mvc="http://www.springframework.org/schema/mvc"   
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/mvc  
+   		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+<!--自动扫描包  -->
+    <context:component-scan base-package="spring.web"/>
+  
+ <!--默认会在实例化dispactherServlet时候自动启动，不需要明确写出，主要作用是
+ 帮你注册两个bean，DefaultAnnotationHandlerMapping和AnnotationMethodHandlerAdapter 
+ 一个是web.xml里面配置的控制器找到对应的controller类
+ 一个是找到这个controller类里面对应某一个方法 -->  
+ 	<mvc:annotation-driven/>
+ 	
+ 	<!--当然，web.xml里面的controller通过上面的配置找到了对应的类和方法，那类和方法返回给controller
+ 	他要怎么知道要返回到哪一个页面了？所以需要下面配置  -->
+ 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+        <property name="prefix" value="/"/>  
+        <property name="suffix" value=".jsp"/><!--可为空,方便实现自已的依据扩展名来选择视图解释类的逻辑  -->  
+    </bean> 
+     
+    <!-- 配置静态资源，直接映射到对应的文件夹，不被DispatcherServlet处理，3.04新增功能，需要重新设置spring-mvc-3.0.xsd -->  
+    <mvc:resources mapping="/res/img/**" location="/res/img/"/>  
+    <mvc:resources mapping="/res/js/**" location="/res/js/"/>  
+    <mvc:resources mapping="/res/css/**" location="/res/css/"/>  
+     
+ 	<!--配置拦截器  -->
+    <!-- <mvc:interceptors>  
+        多个拦截器,顺序执行  
+        <mvc:interceptor>  
+        这里的path符号有/*, /**, *, ? 等，对于student.do?param=1从?开始不作为path 
+           <mvc:mapping path="/student/save*" />如果不配置或/*,将拦截所有的Controller  
+           <bean class="com.blog.common.interceptor.FromDupInterceptor"></bean>  
+        </mvc:interceptor>  
+    </mvc:interceptors>  -->
+
+
+</beans>
